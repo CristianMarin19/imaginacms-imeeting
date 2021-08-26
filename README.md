@@ -13,7 +13,7 @@ php artisan module:enable Imeeting
 ## Migration
 
 ```bash
-php artisan module:migration Imeeting
+php artisan module:migrate Imeeting
 ```
 
 ## Providers

@@ -69,7 +69,20 @@ class ImeetingServiceProvider extends ServiceProvider
                 return new \Modules\Imeeting\Repositories\Cache\CacheMeetingDecorator($repository);
             }
         );
+        $this->app->bind(
+            'Modules\Imeeting\Repositories\ProviderRepository',
+            function () {
+                $repository = new \Modules\Imeeting\Repositories\Eloquent\EloquentProviderRepository(new \Modules\Imeeting\Entities\Provider());
+
+                if (! config('app.cache')) {
+                    return $repository;
+                }
+
+                return new \Modules\Imeeting\Repositories\Cache\CacheProviderDecorator($repository);
+            }
+        );
 // add bindings
+
 
     }
 }
