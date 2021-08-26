@@ -21,4 +21,9 @@ return [
     ],
     'validation' => [
     ],
+
+    'zoom' => [
+        'description' => 'The description'
+    ]
+    
 ];

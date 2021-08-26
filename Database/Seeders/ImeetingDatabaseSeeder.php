@@ -16,6 +16,7 @@ class ImeetingDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
+        $this->call(ZoomProviderSeeder::class);
  
     }
 

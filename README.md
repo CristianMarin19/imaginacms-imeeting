@@ -16,6 +16,12 @@ php artisan module:enable Imeeting
 php artisan module:migrate Imeeting
 ```
 
+## Seeder
+
+```bash
+php artisan module:seed Imeeting
+```
+
 ## Providers
 
 ### Zoom (By Default)
