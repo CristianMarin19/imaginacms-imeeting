@@ -18,20 +18,20 @@ class MeetingService
      * @param Array meetingAttr (title,startTime,email, etc)
      * @param Array entityAttr (id,type)
      * @param String provider (optional)
-     * @param Array providerConnections (optional) (apiKey,secretKey)
      * @return response
      */
 	public function create($data){
 
-		// Default Provider
-        $service = app("Modules\Imeeting\Services\ZoomService");
+		    // Default Provider
+        $providerName = "zoom";
 
         // check other provider (if exist)
-        if(isset($data['provider'])){
-            $providerName = ucfirst($data['provider']); 
-            $service = app("Modules\Imeeting\Services\{$providerName}");
-        }
-
+        if(isset($data['providerName']))
+            $providerName = $data['providerName'];
+           
+        //Provider Service
+        $service = app('Modules\Imeeting\Services\\'.ucfirst($providerName).'Service');
+        
         // Create Meeting in the Provider
         $meetingDataProvider = $service->create($data);
 

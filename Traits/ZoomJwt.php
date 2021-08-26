@@ -15,15 +15,12 @@ trait ZoomJWT
     private function generateToken($dataRequest)
     {
 
+        // Get Configuration Provider
+        $configBD = imeetingGetProviderConfiguration('zoom');
 
-        if(isset($dataRequest['providerConnections'])){
-            $apiKey = $dataRequest['providerConnections']['apiKey'] ?? null;
-            $apiSecret = $dataRequest['providerConnections']['apiSecret'] ?? null;
-        }else{
-            $apiKey =  env('ZOOM_API_KEY', '');
-            $apiSecret =  env('ZOOM_API_SECRET', '');  
-        }
-
+        $apiKey =  $configBD->options->apiKey;
+        $apiSecret =  $configBD->options->apiSecret;  
+        
         if(empty($apiKey) || empty($apiSecret))
             throw new \Exception('API KEYS NOT FOUND', 404);
 

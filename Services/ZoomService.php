@@ -20,7 +20,7 @@ class ZoomService
 	public function create($dataRequest){
 
 		// Default values
-		$defaultConf = $this->getConfig('asgard.imeeting.config.zoom.defaulValuesMeeting');
+		$defaultConf = $this->getConfig('asgard.imeeting.config.providers.zoom.defaulValuesMeeting');
 		
 		// Get data Meeting
 		$data = $dataRequest['meetingAttr'];

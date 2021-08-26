@@ -10,10 +10,10 @@ return [
     'providers' => [
 
         /*
-        * Provider
+        * Provider Zoom
         */
         'zoom' => [
-            'name' => 'zoom',
+            'name' => 'zoom', // Required
             'apiUrl' => 'https://api.zoom.us/v2/',
             'defaulValuesMeeting' => [
                 'topic' => 'Meeting Shedule with User',

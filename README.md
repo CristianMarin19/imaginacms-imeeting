@@ -31,25 +31,17 @@ Account: https://zoom.us/signin
 	- Api Key
 	- Api Secret
 
-#### Add in env. file
-
-	- ZOOM_API_KEY
-	- ZOOM_API_SECRET
-
-
 ## Meeting Service
 
 ### Params
-	Array meetingAttr (title,startTime,email, etc)
-	Array entityAttr (id,type)
-	String provider (optional)
-	Array providerConnections (optional) (apiKey,secretKey, etc)
-
+	Array meetingAttr Example: 'title','startTime','email' etc
+	Array entityAttr Example: 'id','type' etc
+	String providerName (optional) Example: 'zoom'
 ### Example
 
 ```php
 // Example to create a meeting
-// Zoom is Provider Defautl
+// Zoom is Provider Default
 	if(is_module_enabled('Imeeting')){
 
         // Meeting
