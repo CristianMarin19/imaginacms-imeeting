@@ -23,7 +23,9 @@ return [
     ],
 
     'zoom' => [
-        'description' => 'La descripcion'
+        'description' => 'La descripcion',
+        'apiKey' => 'Api Key',
+        'apiSecret' => 'Api Secret',
     ]
     
 ];
