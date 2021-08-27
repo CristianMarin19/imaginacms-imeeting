@@ -2,198 +2,67 @@
 
 namespace Modules\Imeeting\Http\Controllers\Api;
 
-// Requests & Response
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-
-// Base Api
-use Modules\Ihelpers\Http\Controllers\Api\BaseApiController;
-
-// Request
+use Modules\Core\Icrud\Controllers\BaseCrudController;
+//Model Repository
+use Modules\Imeeting\Repositories\MeetingRepository;
+//Model Requests
 use Modules\Imeeting\Http\Requests\CreateMeetingRequest;
-
-// Transformers
+use Modules\Imeeting\Http\Requests\UpdateMeetingRequest;
+//Transformer
 use Modules\Imeeting\Transformers\MeetingTransformer;
 
-// Repositories
-use Modules\Imeeting\Repositories\MeetingRepository;
+use Illuminate\Http\Request;
 
-class MeetingApiController extends BaseApiController
+class MeetingApiController extends BaseCrudController
 {
+  public $modelRepository;
 
-    private $meeting;
-    private $meetingService;
+  public function __construct(MeetingRepository $modelRepository)
+  {
+    $this->modelRepository = $modelRepository;
+  }
+  
+  /**
+   * Return request to create model
+   *
+   * @param $modelData
+   * @return false
+   */
+  public function modelCreateRequest($modelData)
+  {
+    return new CreateMeetingRequest($modelData);
+  }
 
-    public function __construct(MeetingRepository $meeting){
-       $this->meeting = $meeting;
-       $this->meetingService = app("Modules\Imeeting\Services\MeetingService");
-    }
+  /**
+   * Return request to create model
+   *
+   * @param $modelData
+   * @return false
+   */
+  public function modelUpdateRequest($modelData)
+  {
+    return new UpdateMeetingRequest($modelData);
+  }
 
-    /**
-     * GET ITEMS
-     *
-     * @return mixed
-     */
-    public function index(Request $request)
-    {
-        try {
-            //Get Parameters from URL.
-            $params = $this->getParamsRequest($request);
+  /**
+   * Return model collection transformer
+   *
+   * @param $data
+   * @return mixed
+   */
+  public function modelCollectionTransformer($data)
+  {
+    return MeetingTransformer::collection($data);
+  }
 
-            //Request to Repository
-            $meetings = $this->meeting->getItemsBy($params);
-
-            //Response
-            $response = ["data" => MeetingTransformer::collection($meetings)];
-
-            //If request pagination add meta-page
-            $params->page ? $response["meta"] = ["page" => $this->pageTransformer($meetings)] : false;
-        } catch (\Exception $e) {
-            $status = $this->getStatusError($e->getCode());
-            $response = ["errors" => $e->getMessage()];
-        }
-
-        //Return response
-        return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
-    }
-
-    /**
-     * GET A ITEM
-     *
-     * @param $criteria
-     * @return mixed
-     */
-    public function show($criteria, Request $request)
-    {
-        try {
-            //Get Parameters from URL.
-            $params = $this->getParamsRequest($request);
-
-            //Request to Repository
-            $meeting = $this->meeting->getItem($criteria, $params);
-
-            //Break if no found item
-            if (!$meeting) throw new \Exception('Item not found', 404);
-
-            //Response
-            $response = ["data" => new MeetingTransformer($meeting)];
-
-            //If request pagination add meta-page
-            $params->page ? $response["meta"] = ["page" => $this->pageTransformer($meeting)] : false;
-        } catch (\Exception $e) {
-            $status = $this->getStatusError($e->getCode());
-            $response = ["errors" => $e->getMessage()];
-        }
-
-        //Return response
-        return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
-    }
-    
-    /**
-     * GET - Create
-     * @param Request
-     * @return response
-     */
-    public function create(Request $request){
-
-        \DB::beginTransaction();
-
-        try {
-
-            $data = $request['attributes'] ?? [];//Get data
-
-            //Validate Request
-            $this->validateRequestApi(new CreateMeetingRequest($data));
-
-            //Service Meeting
-            $meeting = $this->meetingService->create($data);
-            
-            //Response
-            $response = ["data" => new MeetingTransformer($meeting)];
-
-            \DB::commit(); //Commit to Data Base
-          } catch (\Exception $e) {
-
-            \DB::rollback();//Rollback to Data Base
-            //Message Error
-            $status = 500;
-            $response = [
-              'errors' => $e->getMessage()
-            ];
-        }
-
-        return response()->json($response, $status ?? 200);
-
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @return Response
-     */
-    public function update($criteria, Request $request)
-    {
-        \DB::beginTransaction();
-
-        try {
-
-            $params = $this->getParamsRequest($request);
-
-            $data = $request->input('attributes') ?? [];
-
-            //Update data
-            //Request to Repository
-            $entity = $this->meeting->getItem($criteria, $params);
-
-            //Break if no found item
-            if (!$entity) throw new \Exception('Item not found', 404);
-
-            $meeting = $this->meeting->update($entity, $data);
-            //Response
-            $response = ['data' => 'Item Updated'];
-            \DB::commit(); //Commit to Data Base
-
-        } catch (\Exception $e) {
-          \Log::error($e->getMessage());
-            \DB::rollback();//Rollback to Data Base
-            $status = $this->getStatusError($e->getCode());
-            $response = ["errors" => $e->getMessage()];
-        }
-        return response()->json($response, $status ?? 200);
-    }
-
-    /**
-    * Remove the specified resource from storage.
-    * @return Response
-    */
-    public function delete($criteria, Request $request)
-    {
-        
-        \DB::beginTransaction();
-
-        try {
-
-            $params = $this->getParamsRequest($request);
-           
-            //Request to Repository
-            $entity = $this->meeting->getItem($criteria, $params);
-
-            //Break if no found item
-            if (!$entity) throw new \Exception('Item not found', 404);
-
-            $meeting = $this->meeting->destroy($entity);
-            //Response
-            $response = ['data' => 'Item Deleted'];
-            \DB::commit(); //Commit to Data Base
-
-        } catch (\Exception $e) {
-          \Log::error($e->getMessage());
-            \DB::rollback();//Rollback to Data Base
-            $status = $this->getStatusError($e->getCode());
-            $response = ["errors" => $e->getMessage()];
-        }
-        return response()->json($response, $status ?? 200);
-    }
-    
-
+  /**
+   * Return model transformer
+   *
+   * @param $data
+   * @return mixed
+   */
+  public function modelTransformer($data)
+  {
+    return new MeetingTransformer($data);
+  }
 }

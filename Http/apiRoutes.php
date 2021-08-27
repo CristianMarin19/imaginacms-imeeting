@@ -4,16 +4,18 @@ use Illuminate\Routing\Router;
 
 $router->group(['prefix' => '/imeeting/v1'], function (Router $router) {
 
+    $router->apiCrud([
+      'module' => 'imeeting',
+      'prefix' => 'meetings',
+      'controller' => 'MeetingApiController',
+      'middleware' => [] 
+    ]);
     
-    //======  Meetings
-    require('ApiRoutes/meetingRoutes.php');
-    
-
     $router->apiCrud([
       'module' => 'imeeting',
       'prefix' => 'providers',
       'controller' => 'ProviderApiController',
-      'middleware' => ['index' => []] // Just Testing
+      'middleware' => []
     ]);
 // append
 
