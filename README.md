@@ -24,25 +24,25 @@ php artisan module:seed Imeeting
 
 ## Providers
 
-### Zoom (By Default)
+### * Zoom (By Default)
 
 #### Account and get configurations (App JWT)
 Account: https://zoom.us/signin
-	- Api Key
-	- Api Secret
+- Api Key
+- Api Secret
 
 ## Meeting Service
 
 ### Params
-	Array meetingAttr Example: 'title','startTime','email' etc
-	Array entityAttr Example: 'id','type' etc
-	String providerName (optional) Example: 'zoom'
+	@param meetingAttr - Array | Example: 'title','startTime','email'
+	@param entityAttr - Array | Example: 'id','type'
+	@param providerName - String (optional) | Example: 'zoom'
 ### Example
 
 ```php
 // Example to create a meeting
 // Zoom is Provider Default
-	if(is_module_enabled('Imeeting')){
+if(is_module_enabled('Imeeting')){
 
         // Meeting
         $dataToCreate['meetingAttr'] =[
@@ -59,5 +59,5 @@ Account: https://zoom.us/signin
 
         $meeting = app('Modules\Imeeting\Services\MeetingService')->create($dataToCreate);
 
-	}
+}
 ```
