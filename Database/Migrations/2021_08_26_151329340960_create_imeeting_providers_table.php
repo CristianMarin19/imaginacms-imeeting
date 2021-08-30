@@ -22,6 +22,8 @@ class CreateImeetingProvidersTable extends Migration
             $table->text('options');
 
             $table->timestamps();
+            $table->auditStamps();
+
         });
     }
 

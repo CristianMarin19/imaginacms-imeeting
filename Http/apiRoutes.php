@@ -8,7 +8,7 @@ $router->group(['prefix' => '/imeeting/v1'], function (Router $router) {
       'module' => 'imeeting',
       'prefix' => 'meetings',
       'controller' => 'MeetingApiController',
-      'middleware' => [] 
+      'middleware' => ['create' => [],'index' => []] // Just Testing
     ]);
     
     $router->apiCrud([

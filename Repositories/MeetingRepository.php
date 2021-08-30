@@ -2,8 +2,8 @@
 
 namespace Modules\Imeeting\Repositories;
 
-use Modules\Core\Repositories\BaseRepository;
+use Modules\Core\Icrud\Repositories\BaseCrudRepository;
 
-interface MeetingRepository extends BaseRepository
+interface MeetingRepository extends BaseCrudRepository
 {
 }

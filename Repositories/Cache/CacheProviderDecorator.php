@@ -3,9 +3,9 @@
 namespace Modules\Imeeting\Repositories\Cache;
 
 use Modules\Imeeting\Repositories\ProviderRepository;
-use Modules\Core\Repositories\Cache\BaseCacheDecorator;
+use Modules\Core\Icrud\Repositories\Cache\BaseCacheCrudDecorator;
 
-class CacheProviderDecorator extends BaseCacheDecorator implements ProviderRepository
+class CacheProviderDecorator extends BaseCacheCrudDecorator implements ProviderRepository
 {
     public function __construct(ProviderRepository $provider)
     {

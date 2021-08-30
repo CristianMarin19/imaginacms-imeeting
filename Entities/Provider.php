@@ -3,10 +3,10 @@
 namespace Modules\Imeeting\Entities;
 
 use Astrotomic\Translatable\Translatable;
-use Illuminate\Database\Eloquent\Model;
+use Modules\Core\Icrud\Entities\CrudModel;
 use Modules\Media\Support\Traits\MediaRelation;
 
-class Provider extends Model
+class Provider extends CrudModel
 {
     use Translatable, MediaRelation;
 

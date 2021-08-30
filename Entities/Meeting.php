@@ -3,8 +3,9 @@
 namespace Modules\Imeeting\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\Core\Icrud\Entities\CrudModel;
 
-class Meeting extends Model
+class Meeting extends CrudModel
 {
    
 

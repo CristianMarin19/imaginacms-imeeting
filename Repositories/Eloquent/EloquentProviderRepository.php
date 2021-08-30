@@ -3,9 +3,9 @@
 namespace Modules\Imeeting\Repositories\Eloquent;
 
 use Modules\Imeeting\Repositories\ProviderRepository;
-use Modules\Core\Repositories\Eloquent\EloquentBaseRepository;
+use Modules\Core\Icrud\Repositories\Eloquent\EloquentCrudRepository;
 
-class EloquentProviderRepository extends EloquentBaseRepository implements ProviderRepository
+class EloquentProviderRepository extends EloquentCrudRepository implements ProviderRepository
 {
 
 	/**
