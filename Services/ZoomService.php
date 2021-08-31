@@ -43,14 +43,33 @@ class ZoomService
             ]
 		];
 
-		// Request
-        $response = $this->requestPost($path,$body,$data);
-
-        // Format data to save
-        $dataFormat = $this->formatResponse(json_decode($response->body()));
+		try {
+			// Request
+	        $response = $this->requestPost($path,$body,$data);
 
 
-        return $dataFormat;
+	        // Format data to save
+	        //$dataFormat = $this->formatResponse(json_decode($response->body()));
+
+	        $resultResponse = json_decode($response->body());
+
+	        if(isset($resultResponse->id)){
+	        	$result = $this->formatResponse($resultResponse);
+	        	//return $this->formatResponse($resultResponse);
+	        }else{
+	        	throw new \Exception($resultResponse->message, 500);
+	        	//return $resultResponse;
+	        }
+
+	    } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            $status = 500;
+            $result = [
+                'errors' => $e->getMessage()
+            ];
+        }
+       
+        return $result;
         
 
 	}

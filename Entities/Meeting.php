@@ -35,5 +35,12 @@ class Meeting extends CrudModel
         $this->attributes['options'] = json_encode($value);
     }
 
+    
+    public function meetingable()
+    {
+        return $this->morphTo();
+    }
+   
+
 
 }

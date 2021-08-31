@@ -32,29 +32,35 @@ class MeetingService
         //Provider Service
         $service = app('Modules\Imeeting\Services\\'.ucfirst($providerName).'Service');
         
-        // Create Meeting in the Provider
-        $meetingDataProvider = $service->create($data);
-
-        // Add entities attributes from request
-        $meetingDataProvider['entity_id'] = $data['entityAttr']['id'];
-        $meetingDataProvider['entity_type'] = $data['entityAttr']['type'];
         
-        try {
+      try {
+
+          // Create Meeting in the Provider
+          $meetingDataProvider = $service->create($data);
+
+          // Validate Error Provider
+          if(isset($meetingDataProvider['errors']))
+            throw new \Exception($meetingDataProvider['errors'], 500);
+          
+          // Add entities attributes from request
+          $meetingDataProvider['entity_id'] = $data['entityAttr']['id'];
+          $meetingDataProvider['entity_type'] = $data['entityAttr']['type'];
 
 	        //Create meeting in Module
 	        $response = $this->meeting->create($meetingDataProvider);
 
 	    } catch (\Exception $e) {
 
-	    	$status = 500;
+	    	    $status = 500;
             $response = [
               'errors' => $e->getMessage()
             ];
 
             \Log::error('Module Imeeting: Service Meeting - Create: '.$e->getMessage());
+
 	    }
 
-        return $response;
+      return $response;
             
 	}
 
