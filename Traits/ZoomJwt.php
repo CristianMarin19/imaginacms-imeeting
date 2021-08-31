@@ -80,6 +80,21 @@ trait ZoomJWT
         return $request->post($url . $path, $body);
 
     }
+
+    /**
+     *  GET - REQUEST 
+     *  @param String $path
+     *  @param Array $body
+     */
+    public function requestGet(string $path, array $body = [],$dataRequest)
+    {
+
+        $url = $this->getApiUrl();
+        $request = $this->getRequestWithHeaderToken($dataRequest);
+
+        return $request->get($url . $path, $body);
+
+    }
     
     /**
     * Convert Time

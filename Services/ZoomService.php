@@ -25,6 +25,15 @@ class ZoomService
 		// Get data Meeting
 		$data = $dataRequest['meetingAttr'];
 
+		// Testing Find and Create User
+		// Only Pro or higher plan
+		/*
+		$existUser = $this->findUser($data['email']);
+		if(!isset($existUser->id)){
+			dd($this->createUser($data['email']));
+		}
+		*/
+
 		
 		// 'me' => Esto lo asignaria con el mismo host siempre
 		//$path = 'users/me/meetings';
@@ -89,6 +98,74 @@ class ZoomService
 		// $data["options"]
 		
 		return $data;
+
+	}
+
+	/**
+	* @param email from user (Host)
+	* @return object id | object code=1001 - message="not found" 
+	*/
+	public function findUser($email){
+
+		$path = 'users/'.$email;
+		$body = [];
+		$data = [];
+
+		try {
+
+			// Request
+	        $response = $this->requestGet($path,$body,$data);
+
+	        $result = json_decode($response->body());
+
+	    } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            $status = 500;
+            $result = [
+                'errors' => $e->getMessage()
+            ];
+        }
+       
+        return $result;
+
+	}
+
+	/**
+	* @param Only Pro or higher plan
+	* @return object user
+	*/
+	public function createUser($email){
+
+		$path = 'users';
+		$body = [];
+		$data = [];
+
+		$body = [
+			'action' => 'create',
+            'user_info' => [
+                'email' => $email,
+			    'type'=> 1, //Basic
+			    'first_name' => "Prueba",
+			    'last_name'=> "Perez"
+            ]
+		];
+
+		try {
+
+			// Request
+	        $response = $this->requestPost($path,$body,$data);
+
+	        $result = json_decode($response->body());
+
+	    } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            $status = 500;
+            $result = [
+                'errors' => $e->getMessage()
+            ];
+        }
+       
+        return $result;
 
 	}
    

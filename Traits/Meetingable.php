@@ -29,8 +29,8 @@ trait Meetingable
 	{
 	    //Get event bindings by event name
 	    $eventBindings = $this->getEventBindings('createdWithBindings');
-	    
-
+	    	
+	    // Validate meeting data from Entity Created
 	 	if(isset($eventBindings['data']['meeting'])){
 	 		
 	 		// Data Metting
@@ -42,6 +42,7 @@ trait Meetingable
 	            'type' => get_class($this),  
 	        ];
 
+	        // Create meeting with Provider
 	        $meeting = app('Modules\Imeeting\Services\MeetingService')->create($dataToCreate);
 
 	        if(isset($meeting['errors']))
