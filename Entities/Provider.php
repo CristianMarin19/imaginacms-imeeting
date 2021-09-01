@@ -8,7 +8,14 @@ use Modules\Media\Support\Traits\MediaRelation;
 
 class Provider extends CrudModel
 {
+
     use Translatable, MediaRelation;
+
+    public $transformer = 'Modules\Imeeting\Transformers\ProviderTransformer';
+    public $requestValidation = [
+        'create' => 'Modules\Imeeting\Http\Requests\CreateProviderRequest',
+        'update' => 'Modules\Imeeting\Http\Requests\UpdateProviderRequest',
+    ];
 
     public $translatedAttributes = [
         'title',

@@ -8,6 +8,11 @@ use Modules\Core\Icrud\Entities\CrudModel;
 class Meeting extends CrudModel
 {
    
+    public $transformer = 'Modules\Imeeting\Transformers\MeetingTransformer';
+    public $requestValidation = [
+        'create' => 'Modules\Imeeting\Http\Requests\CreateMeetingRequest',
+        'update' => 'Modules\Imeeting\Http\Requests\UpdateMeetingRequest',
+    ];
 
     protected $table = 'imeeting__meetings';
 
