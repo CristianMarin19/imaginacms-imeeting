@@ -8,8 +8,6 @@ trait Meetingable
 {
 
 
-	protected $createMeeting = false;
-
 	/**
    	* Boot trait method
    	*/
@@ -17,50 +15,87 @@ trait Meetingable
 	{
 	    //Listen event after create model
 	    static::createdWithBindings(function ($model) {
-	      $model->createMeeting();
+	      $model->checkMeetingRequirements($model->getEventBindings('createdWithBindings'));
+	    });
+
+	    static::updatedWithBindings(function ($model) {
+	      $model->checkMeetingRequirements($model->getEventBindings('updatedWithBindings'));
 	    });
 
 	}
 
 	/**
-   	* Create meeting to entity
+   	* Check Meeting Requirements when a model is created or updated
    	*/
-	public function createMeeting()
+	public function checkMeetingRequirements($params)
 	{
-	    //Get event bindings by event name
-	    $eventBindings = $this->getEventBindings('createdWithBindings');
-	    	
-	    // Validate meeting data from Entity Created
-	 	if(isset($eventBindings['data']['meeting'])){
+
+		\Log::info('Imeeting: Trait Meetingable - Check Requirements');
+	    $meetingConfig = $params['data']['meetingConfig'];
+
+	 	if(isset($meetingConfig['providerName'])){
 	 		
-	 		// Data Metting
-        	$dataToCreate['meetingAttr'] = $eventBindings['data']['meeting'];
+	 		//Provider Service
+        	$service = app('Modules\Imeeting\Services\\'.ucfirst($meetingConfig['providerName']).'Service');
 
-	 		// Entity
-	        $dataToCreate['entityAttr'] =[
-	            'id' => $this->id,
-	            'type' => get_class($this),  
-	        ];
+        	try {
 
-	        // Create meeting with Provider
-	        $meeting = app('Modules\Imeeting\Services\MeetingService')->create($dataToCreate);
+          		$response = $service->checkRequirements($meetingConfig);
 
-	        if(isset($meeting['errors']))
-            	throw new \Exception($meeting['errors'], 500);
+        	} catch (\Exception $e) {
+
+	    	    $status = 500;
+	            $response = [
+	              'errors' => $e->getMessage()
+	            ];
+
+            	\Log::error('Module Imeeting: Trait Meetingable - Check Meeting : '.$e->getMessage());
+
+	    	}
             
 	 	}
 
-
 	}
 
-    /*
-	* Entity Relation with Meetings
-	*/
-    public function meetings()
-  	{
-    	return $this->morphMany(Meeting::class, 'entity');
-  	}
-  	
+	/**
+   	* @param meetingConfig - providerName
+   	* @param meetingConfig - email
+   	* @return
+   	*/
+   	public function validateMeetingRequirements($params){
+   		
+   		\Log::info('Imeeting: Trait Meetingable - validateMeetingRequirements');
 
+   		$meetingConfig = $params['meetingConfig'];
 
+   		if(isset($meetingConfig['providerName'])){
+	 		
+	 		//Provider Service
+        	$service = app('Modules\Imeeting\Services\\'.ucfirst($meetingConfig['providerName']).'Service');
+
+        	try {
+
+          		$responseService = $service->validateRequirements($meetingConfig);
+
+          		$response['providerStatus'] = $responseService;
+
+        	} catch (\Exception $e) {
+
+	    	    $status = 500;
+	    	   
+	            $response = [
+	              'errors' => $e->getMessage()
+	            ];
+	           
+            	\Log::error('Module Imeeting: Trait Meetingable - validateMeetingRequirements '.$e->getMessage());
+
+	    	}
+            
+	 	}
+
+	 	return $response;
+
+   	}
+
+   
 }
