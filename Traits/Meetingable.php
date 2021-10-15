@@ -31,30 +31,31 @@ trait Meetingable
 	{
 
 		\Log::info('Imeeting: Trait Meetingable - Check Requirements');
-	    $meetingConfig = $params['data']['meetingConfig'];
+	    if(isset($params['data']['meeting_config'])) {
+            $meetingConfig = $params['data']['meeting_config'];
 
-	 	if(isset($meetingConfig['providerName'])){
-	 		
-	 		//Provider Service
-        	$service = app('Modules\Imeeting\Services\\'.ucfirst($meetingConfig['providerName']).'Service');
+            if (isset($meetingConfig['provider_name'])) {
 
-        	try {
+                //Provider Service
+                $service = app('Modules\Imeeting\Services\\' . ucfirst($meetingConfig['provider_name']) . 'Service');
 
-          		$response = $service->checkRequirements($meetingConfig);
+                try {
 
-        	} catch (\Exception $e) {
+                    $response = $service->checkRequirements($meetingConfig);
 
-	    	    $status = 500;
-	            $response = [
-	              'errors' => $e->getMessage()
-	            ];
+                } catch (\Exception $e) {
 
-            	\Log::error('Module Imeeting: Trait Meetingable - Check Meeting : '.$e->getMessage());
+                    $status = 500;
+                    $response = [
+                        'errors' => $e->getMessage()
+                    ];
 
-	    	}
-            
-	 	}
+                    \Log::error('Module Imeeting: Trait Meetingable - Check Meeting : ' . $e->getMessage());
 
+                }
+
+            }
+        }
 	}
 
 	/**
@@ -63,39 +64,41 @@ trait Meetingable
    	* @return
    	*/
    	public function validateMeetingRequirements($params){
-   		
+
    		\Log::info('Imeeting: Trait Meetingable - validateMeetingRequirements');
 
    		$meetingConfig = $params['meetingConfig'];
 
    		if(isset($meetingConfig['providerName'])){
-	 		
+
 	 		//Provider Service
         	$service = app('Modules\Imeeting\Services\\'.ucfirst($meetingConfig['providerName']).'Service');
 
         	try {
-
           		$responseService = $service->validateRequirements($meetingConfig);
 
-          		$response['providerStatus'] = $responseService;
+          		$response = Array_merge([
+                    'email' => $meetingConfig['email'],
+          			'providerName' => $meetingConfig['providerName'],
+          		],$responseService);
 
         	} catch (\Exception $e) {
 
 	    	    $status = 500;
-	    	   
+
 	            $response = [
 	              'errors' => $e->getMessage()
 	            ];
-	           
+
             	\Log::error('Module Imeeting: Trait Meetingable - validateMeetingRequirements '.$e->getMessage());
 
 	    	}
-            
+
 	 	}
 
 	 	return $response;
 
    	}
 
-   
+
 }
