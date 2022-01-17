@@ -12,6 +12,7 @@ class ZoomService
 
 
     /**
+     * Create the Meeting
      * @param Email - email (required)
      * @param DateTime - startTime (required)
      * @param String - topic (optional)
@@ -20,7 +21,7 @@ class ZoomService
     public function create($dataRequest)
     {
 
-        \Log::info('Imeeting: Zoom Service - create');
+        \Log::info('Imeeting: Services|ZoomService|Create');
 
         // Default values
         $defaultConf = $this->getConfig('asgard.imeeting.config.providers.zoom.defaulValuesMeeting');
@@ -38,7 +39,7 @@ class ZoomService
         // 'me' => Esto lo asignaria con el mismo host siempre
         //$path = 'users/me/meetings';
 
-        \Log::info('Imeeting: Zoom Service - create - host: ' . $data['email']);
+        \Log::info('Imeeting: Services|ZoomService|Create|Host: '.$data['email']);
 
         $path = 'users/' . $data['email'] . '/meetings';
 
@@ -111,7 +112,7 @@ class ZoomService
     public function findUser($email)
     {
 
-        \Log::info('Imeeting: Zoom Service - Find User: ' . $email);
+        \Log::info('Imeeting: Services|ZoomService|FindUser: '.$email);
 
         $path = 'users/' . $email;
         $body = [];
@@ -121,7 +122,6 @@ class ZoomService
 
             // Request
             $response = $this->requestGet($path, $body, $data);
-
             $result = json_decode($response->body());
 
         } catch (\Exception $e) {
@@ -143,7 +143,7 @@ class ZoomService
     public function createUser($email)
     {
 
-        \Log::info('Imeeting: Zoom Service - Create User');
+        \Log::info('Imeeting: Services|ZoomService|CreateUser');
 
         $path = 'users';
         $body = [];
@@ -163,8 +163,7 @@ class ZoomService
 
             // Request
             $response = $this->requestPost($path, $body, $data);
-
-            \Log::info('Imeeting: Zoom Service - *** User Created ***');
+            \Log::info('Imeeting: Services|ZoomService|CreateUser: Created');
 
             $result = json_decode($response->body());
 
@@ -181,13 +180,14 @@ class ZoomService
     }
 
     /**
-     * @param $data email
-     * @return
+     * Find if User exist and if it does not exist it is created.
+     * @param array $data[email]
+     * @return response[msj]
      */
     public function checkRequirements($data)
     {
 
-        \Log::info('Imeeting: Zoom Service - Check Requirements');
+        \Log::info('Imeeting: Services|ZoomService|CheckRequirements');
 
         $existUser = $this->findUser($data['email']);
         if (!isset($existUser->id)) {
@@ -195,7 +195,7 @@ class ZoomService
             $response['msj'] = $userCreated;
         } else {
             $response['msj'] = "Imeeting: Zoom Service - User Exist";
-            \Log::info('Imeeting: Zoom Service - User Exist');
+            \Log::info('Imeeting: Services|ZoomService|CheckRequirements: User Exist');
         }
 
         return $response;
@@ -203,12 +203,13 @@ class ZoomService
     }
 
     /**
-     * @param $data email
-     * @return
+     * Find the User and get status in Zoom
+     * @param array $data[email]
+     * @return response['providerStatus','providerStatusName']
      */
     public function validateRequirements($data)
     {
-        \Log::info('Imeeting: Zoom Service - Validate Requirements');
+        \Log::info('Imeeting: Services|ZoomService|ValidateRequirements');
 
         $resultResponse = $this->findUser($data['email']);
         //Default response
@@ -223,8 +224,9 @@ class ZoomService
             ];
         }
 
-        \Log::info('Imeeting: Zoom Service - Validate Requirements - Status: ' . json_encode($response));
+        \Log::info('Imeeting: Services|ZoomService|ValidateRequirements|Status: ' . json_encode($response));
 
         return $response ?? [];
     }
+
 }
