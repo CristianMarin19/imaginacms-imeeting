@@ -4,6 +4,11 @@ namespace Modules\Imeeting\Traits;
 
 use Modules\Imeeting\Entities\Meeting;
 
+
+/**
+* Trait to check and validate requirements 
+* Used in : Ibooking-Resource, Ibooking-ResourceTransformer
+*/
 trait Meetingable
 {
 
@@ -26,11 +31,13 @@ trait Meetingable
 
 	/**
    	* Check Meeting Requirements when a model is created or updated
+   	* Case Zoom: It is necessary to have a zoom user for the meeting
    	*/
 	public function checkMeetingRequirements($params)
 	{
 
-		\Log::info('Imeeting: Trait Meetingable - Check Requirements');
+		\Log::info('Imeeting: Traits|Meetingable|CheckMeetingRequirements');
+
 	    if(isset($params['data']['meeting_config'])) {
             $meetingConfig = $params['data']['meeting_config'];
 
@@ -49,8 +56,7 @@ trait Meetingable
                     $response = [
                         'errors' => $e->getMessage()
                     ];
-
-                    \Log::error('Module Imeeting: Trait Meetingable - Check Meeting : ' . $e->getMessage());
+                    \Log::error('Imeeting: Traits|Meetingable|CheckMeetingRequirements|Message: '.$e->getMessage().' | FILE: '.$e->getFile().' | LINE: '.$e->getLine());
 
                 }
 
@@ -59,13 +65,15 @@ trait Meetingable
 	}
 
 	/**
+	* Validations in Provider Meetings
+	* Case Zoom: User must be "verified" to create a meeting
    	* @param meetingConfig - providerName
    	* @param meetingConfig - email
    	* @return
    	*/
    	public function validateMeetingRequirements($params){
 
-   		\Log::info('Imeeting: Trait Meetingable - validateMeetingRequirements');
+   		\Log::info('Imeeting: Traits|Meetingable|ValidateMeetingRequirements');
 
    		$meetingConfig = $params['meetingConfig'];
 
@@ -85,12 +93,10 @@ trait Meetingable
         	} catch (\Exception $e) {
 
 	    	    $status = 500;
-
 	            $response = [
 	              'errors' => $e->getMessage()
 	            ];
-
-            	\Log::error('Module Imeeting: Trait Meetingable - validateMeetingRequirements '.$e->getMessage());
+            	\Log::error('Imeeting: Traits|Meetingable|ValidateMeetingRequirements|Message: '.$e->getMessage().' | FILE: '.$e->getFile().' | LINE: '.$e->getLine());
 
 	    	}
 
