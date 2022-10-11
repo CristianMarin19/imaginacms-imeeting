@@ -46,7 +46,7 @@ class ImeetingServiceProvider extends ServiceProvider
         $this->mergeConfigFrom($this->getModuleConfigFilePath('imeeting', 'settings-fields'), "asgard.imeeting.settings-fields");
         $this->mergeConfigFrom($this->getModuleConfigFilePath('imeeting', 'permissions'), "asgard.imeeting.permissions");
 
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        //$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     }
 
     /**
