@@ -16,6 +16,7 @@ class ImeetingDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
+        $this->call(ImeetingModuleTableSeeder::class);
         $this->call(ZoomProviderSeeder::class);
  
     }
