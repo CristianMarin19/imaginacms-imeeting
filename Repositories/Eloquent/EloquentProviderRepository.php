@@ -21,7 +21,7 @@ class EloquentProviderRepository extends EloquentCrudRepository implements Provi
    	* @param $filter
    	* @return mixed
    	*/
-  	public function filterQuery($query, $filter)
+  	public function filterQuery($query, $filter, $params = false)
   	{
     
     /**
